@@ -3,7 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => ({
     entry: [
-        './gopublish/react/src/index.jsx'
+        './askosite/react/src/index.jsx'
     ],
     module: {
         rules: [

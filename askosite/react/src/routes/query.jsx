@@ -4,7 +4,6 @@ import { Alert, Button, CustomInput, Row, Col, ButtonGroup, Input, Spinner } fro
 import { Redirect } from 'react-router-dom'
 import ErrorDiv from './error'
 import update from 'react-addons-update'
-import Visualization from './visualization'
 import AttributeBox from './attribute'
 import ResultsTable from './resultstable'
 import PropTypes from 'prop-types'
@@ -567,7 +566,7 @@ export default class Query extends Component {
           }
         })
         // Link view (rightview)
-
+      }
       // buttons
       let previewIcon = <i className={"fas fa-" + this.state.previewIcon}></i>
       if (this.state.previewIcon == "spinner") {

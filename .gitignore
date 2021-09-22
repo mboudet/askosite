@@ -59,7 +59,7 @@ supervisord.pid
 
 ### Node ###
 
-gopublish/static/js/*
+askosite/static/js/*
 
 # Logs
 logs

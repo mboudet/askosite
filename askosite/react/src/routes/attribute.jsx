@@ -3,12 +3,11 @@ import axios from 'axios'
 import { Input, FormGroup, CustomInput, FormFeedback } from 'reactstrap'
 import { Redirect } from 'react-router-dom'
 import DatePicker from "react-datepicker";
-import ErrorDiv from '../error/error'
-import WaitingDiv from '../../components/waiting'
+import ErrorDiv from './error'
+import WaitingDiv from './waiting'
 import update from 'react-addons-update'
-import Visualization from './visualization'
 import PropTypes from 'prop-types'
-import Utils from '../../classes/utils'
+import Utils from '../classes/utils'
 
 export default class AttributeBox extends Component {
   constructor (props) {

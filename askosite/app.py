@@ -2,7 +2,8 @@ import os
 
 from flask import Flask, g
 
-from gopublish.api.view import view
+from askosite.api.view import view
+from askosite.api.start import start
 
 from .middleware import PrefixMiddleware
 
@@ -10,7 +11,8 @@ from .middleware import PrefixMiddleware
 __all__ = ('create_app', )
 
 BLUEPRINTS = (
-    view
+    view,
+    start
 )
 
 CONFIG_KEYS = (
@@ -31,9 +33,11 @@ def create_app(config=None, app_name='askosite', blueprints=None, run_mode=None,
 
     with app.app_context():
 
+        app.is_worker = is_worker
+
         configs = {
-            "dev": "gopublish.config.DevelopmentConfig",
-            "prod": "gopublish.config.ProdConfig"
+            "dev": "askosite.config.DevelopmentConfig",
+            "prod": "askosite.config.ProdConfig"
         }
         if run_mode:
             config_mode = run_mode
@@ -92,6 +96,7 @@ def configure_logging(app):
         return
 
     import logging
+    import logging.handlers
 
     # Set log level
     if app.config['ASKOSITE_RUN_MODE'] == 'test':
@@ -100,6 +105,17 @@ def configure_logging(app):
         app.logger.setLevel(logging.INFO)
 
     info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
+
+    # Ensure log file is writable by nginx (worker)
+    if not app.is_worker:
+        if not os.path.exists(app.config['LOG_FOLDER']):
+            os.makedirs(app.config['LOG_FOLDER'])
+
+        if not os.path.exists(info_log):
+            open(info_log, 'a').close()
+        os.chown(info_log, pwd.getpwnam("nginx").pw_uid, grp.getgrnam("nginx").gr_gid)
+
+
     info_file_handler = logging.handlers.RotatingFileHandler(info_log, maxBytes=100000, backupCount=10)
     info_file_handler.setLevel(logging.INFO)
     info_file_handler.setFormatter(logging.Formatter(

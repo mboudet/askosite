@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Alert } from 'reactstrap'
 import { Redirect } from 'react-router'
 import PropTypes from 'prop-types'
-import Utils from '../../classes/utils'
+import Utils from './utils'
 
 export default class ErrorDiv extends Component {
   constructor (props) {

@@ -6,3 +6,7 @@ services:
         build: ./
         ports:
             - 80:80
+        environment:
+            - ASKOMICS_URL=https://test-192-168-100-87.vm.openstack.genouest.org
+        volumes:
+            - ./local.cfg:/askosite/local.cfg

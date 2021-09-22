@@ -6,7 +6,7 @@ class BaseConfig(object):
 
     # No trailing /
     BASE_URL = "localhost"
-    LOG_FOLDER = "/var/log/gopublish/"
+    LOG_FOLDER = "/var/log/askosite/"
 
 
 class DevelopmentConfig(BaseConfig):

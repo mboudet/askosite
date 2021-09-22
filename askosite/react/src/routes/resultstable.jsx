@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
-import WaitingDiv from '../../components/waiting'
+import WaitingDiv from './waiting'
 import { Badge } from 'reactstrap'
 import PropTypes from 'prop-types'
-import Utils from '../../classes/utils'
+import Utils from './utils'
 import update from 'immutability-helper';
 
 export default class ResultsTable extends Component {
