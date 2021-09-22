@@ -106,15 +106,8 @@ def configure_logging(app):
 
     info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
 
-    # Ensure log file is writable by nginx (worker)
-    if not app.is_worker:
-        if not os.path.exists(app.config['LOG_FOLDER']):
-            os.makedirs(app.config['LOG_FOLDER'])
-
-        if not os.path.exists(info_log):
-            open(info_log, 'a').close()
-        os.chown(info_log, pwd.getpwnam("nginx").pw_uid, grp.getgrnam("nginx").gr_gid)
-
+    if not os.path.exists(app.config['LOG_FOLDER']):
+        os.makedirs(app.config['LOG_FOLDER'])
 
     info_file_handler = logging.handlers.RotatingFileHandler(info_log, maxBytes=100000, backupCount=10)
     info_file_handler.setLevel(logging.INFO)
