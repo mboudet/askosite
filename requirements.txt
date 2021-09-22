@@ -6,14 +6,3 @@ Markdown
 PyYAML
 Werkzeug
 requests
-email_validator
-
-# Celery
-redis
-celery<5
-
-# Dates
-python-dateutil
-tzlocal
-
-pyjwt

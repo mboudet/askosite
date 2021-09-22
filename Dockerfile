@@ -15,8 +15,6 @@ RUN apk add --no-cache \
     ca-certificates \
     postgresql-libs \
     at \
-    postgresql-client \
-    tzdata \
     nodejs nodejs-npm \
     gcc g++ libstdc++ make \
     wget curl unzip && \

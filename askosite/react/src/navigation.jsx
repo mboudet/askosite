@@ -14,12 +14,10 @@ class AskositeNavigation extends Component {
 
   render () {
     let links
-    let searchBar
 
     links = (
           <>
           <NavItem><Link className="nav-link" to="/"><i className="fas fa-home"></i> Home</Link></NavItem>
-          <NavItem><Link className="nav-link" to="/files"><i className="fas fa-file"></i> Files</Link></NavItem>
           <NavItem><Link className="nav-link" to="/about"><i className="fas fa-info"></i> About</Link></NavItem>
           </>
     )
@@ -28,7 +26,7 @@ class AskositeNavigation extends Component {
       <div>
         <Navbar color="dark" dark expand="md">
           <div className="container">
-            <NavbarBrand href="/"> Gopublish</NavbarBrand>
+            <NavbarBrand href="/"> Askosite</NavbarBrand>
             <Collapse navbar>
               <Nav className="mr-auto" navbar>
                 {links}

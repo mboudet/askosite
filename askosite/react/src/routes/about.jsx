@@ -12,27 +12,25 @@ export default function About() {
             <CardTitle tag="h3">About </CardTitle>
             <CardText tag="div">
                 <hr/>
-                <h4>What is Gopublish?</h4>
-            
-                <p>
-                    Gopublish aims to provide a public link service for GenOuest users.
-                    Users will be able to <i>publish</i> data and generate public links to share (or add in data warehouses).
-                </p>
+                <h4>What is Askosite?</h4>
 
-                <h4>Warnings</h4>
-                <p>Gopublish and GenOuest do not provide any backup of the data. Data persistence is the sole responsability of the user.</p>
-                <p>Gopublish is a service dedicated to <i>long-term</i> publishing. Please refer to <a target="_newtab" rel="noopener noreferrer" href="https://data-access.cesgo.org">Data-access</a> for a short-term solution.</p>
+                <p>
+                    Askosite is an extension of Askomics. It aims to provide an interactible data catalog
+                </p>
 
                 <h4>Related links</h4>
                 <p>
                   <a target="_newtab" rel="noopener noreferrer" href="https://www.genouest.org/">The GenOuest platform</a>
                 </p>
                 <p>
-                  <a target="_newtab" rel="noopener noreferrer" href="https://github.com/mboudet/gopublish">Github repository</a>
+                  <a target="_newtab" rel="noopener noreferrer" href="https://github.com/askomics/flaskomics">Askomics github repository</a>
+                </p>
+                <p>
+                  <a target="_newtab" rel="noopener noreferrer" href="https://github.com/mboudet/askosite">Askosite github repository</a>
                 </p>
                 <h4>Need help?</h4>
                 <p>
-                  Use <a target="_newtab" rel="noopener noreferrer" href="https://github.com/mboudet/gopublish/issues">Github issues</a> to report a bug, get help or request for a new feature.
+                  Use <a target="_newtab" rel="noopener noreferrer" href="https://github.com/mboudet/askosite/issues">Github issues</a> to report a bug, get help or request for a new feature.
                 </p>
             </CardText>
           </CardBody>

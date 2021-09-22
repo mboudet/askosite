@@ -4,8 +4,7 @@ import axios from 'axios'
 
 import About from './routes/about'
 import Home from './routes/home'
-import File from './routes/file'
-import Files from './routes/files'
+import Query from './routes/query'
 import AskositeNavigation from './navigation'
 
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
@@ -18,10 +17,36 @@ export default class Routes extends Component {
     this.state = {
       config: {
         proxyPath: document.getElementById('proxy_path').getAttribute('proxy_path'),
-        perPage: 10
+        perPage: 30,
+        error: false,
+        errorMessage: null,
+        waiting: true
       }
     }
     this.cancelRequest
+  }
+
+
+  componentDidMount () {
+
+    let requestUrl = '/api/config'
+    axios.get(requestUrl, {baseURL: this.state.config.proxyPath , cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+      .then(response => {
+        this.setState({
+          error: false,
+          errorMessage: null,
+          config: response.data.config,
+          waiting: false
+        })
+      })
+      .catch(error => {
+        this.setState({
+          error: true,
+          errorMessage: error.response.data.errorMessage,
+          status: error.response.status,
+          waiting: false
+        })
+      })
   }
 
   render () {
@@ -33,8 +58,7 @@ export default class Routes extends Component {
           <Switch>
             <Route path="/" exact component={() => (<Home config={this.state.config} />)} />
             <Route path="/about" exact component={() => (<About config={this.state.config} />)} />
-            <Route path="/files" exact component={() => (<Files config={this.state.config} />)} />
-            <Route path="/files/:uri" exact component={() => (<File config={this.state.config} />)} />
+            <Route path="/entity" exact component={() => (<Entity config={this.state.config} />)} />
           </Switch>
           <br />
           <br />
