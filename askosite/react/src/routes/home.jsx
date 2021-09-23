@@ -1,9 +1,11 @@
 import React, { Component, lazy, Suspense } from 'react'
-import { Badge, Button, Card, CardTitle, CardBody, CardText, Form, FormGroup, Input, Label} from 'reactstrap'
+import { Badge, Button, Card, CardTitle, CardBody, CardText, Form, FormGroup, Input, Label, Row, Col, ButtonGroup, CustomInput, Alert} from 'reactstrap'
 import PropTypes from 'prop-types'
+import WaitingDiv from './waiting'
+import ErrorDiv from './error'
+import axios from 'axios'
 
-
-export default class Ask extends Component {
+export default class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -16,7 +18,6 @@ export default class Ask extends Component {
       startSession: false,
       redirectFormBuilder: false
     }
-    this.utils = new Utils()
     this.cancelRequest
     this.handleStart = this.handleStart.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
@@ -50,6 +51,8 @@ export default class Ask extends Component {
   componentDidMount () {
 
       if (!this.props.waitForStart) {
+	console.log(this.props.config.askomicsPath)
+	console.log(this.props.config)
         let requestUrl = '/api/query/startpoints'
         axios.get(requestUrl, {baseURL: this.props.config.askomicsPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
           .then(response => {

@@ -5,7 +5,7 @@ start = Blueprint('start', __name__, url_prefix='/')
 
 
 @start.route('/api/config')
-def config(path):
+def config():
     # Return config here
     config = {
         "askomicsPath": current_app.config.get('ASKOMICS_URL'),

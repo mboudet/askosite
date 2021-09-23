@@ -7,6 +7,7 @@ import update from 'react-addons-update'
 import AttributeBox from './attribute'
 import ResultsTable from './resultstable'
 import PropTypes from 'prop-types'
+import WaitingDiv from './waiting'
 
 export default class Query extends Component {
 

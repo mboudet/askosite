@@ -15,12 +15,15 @@ export default class Routes extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      error: false,
+      errorMessage: null,
+      waiting: true,
       config: {
         proxyPath: document.getElementById('proxy_path').getAttribute('proxy_path'),
+        askomicsUrl: "",
+        excludedEntities: [],
+        excludedAttributes: [],
         perPage: 30,
-        error: false,
-        errorMessage: null,
-        waiting: true
       }
     }
     this.cancelRequest

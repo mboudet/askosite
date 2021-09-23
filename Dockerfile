@@ -36,6 +36,9 @@ COPY . /askosite
 
 WORKDIR /askosite
 
+RUN mkdir /var/log/askosite
+RUN chown nginx:nginx /var/log/askosite
+
 RUN npm install --silent
 RUN npm run --silent prod
 

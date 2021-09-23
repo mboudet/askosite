@@ -40,7 +40,7 @@ class AskositeNavigation extends Component {
   }
 }
 
-GopublishNavigation.propTypes = {
+AskositeNavigation.propTypes = {
   config: PropTypes.object,
   history: PropTypes.object
 }

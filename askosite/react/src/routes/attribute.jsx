@@ -7,7 +7,7 @@ import ErrorDiv from './error'
 import WaitingDiv from './waiting'
 import update from 'react-addons-update'
 import PropTypes from 'prop-types'
-import Utils from '../classes/utils'
+import Utils from './utils'
 
 export default class AttributeBox extends Component {
   constructor (props) {
