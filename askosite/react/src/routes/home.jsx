@@ -51,10 +51,8 @@ export default class Home extends Component {
   componentDidMount () {
 
       if (!this.props.waitForStart) {
-	console.log(this.props.config.askomicsPath)
-	console.log(this.props.config)
-        let requestUrl = '/api/query/startpoints'
-        axios.get(requestUrl, {baseURL: this.props.config.askomicsPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+        let requestUrl = '/api/startpoints'
+        axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
           .then(response => {
 
             this.setState({

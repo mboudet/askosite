@@ -4,6 +4,7 @@ from flask import Flask, g
 
 from askosite.api.view import view
 from askosite.api.start import start
+from askosite.api.query import query
 
 from .middleware import PrefixMiddleware
 
@@ -12,7 +13,8 @@ __all__ = ('create_app', )
 
 BLUEPRINTS = (
     view,
-    start
+    start,
+    query
 )
 
 CONFIG_KEYS = (
@@ -60,6 +62,11 @@ def create_app(config=None, app_name='askosite', blueprints=None, run_mode=None,
 
         if not app.config.get("SECRET_KEY"):
             raise Exception("Missing secret_key")
+
+        if not app.config.get("ASKOMICS_URL"):
+            raise Exception("Missing ASKOMICS_URL")
+
+        app.config["ASKOMICS_URL"] = app.config["ASKOMICS_URL"].rstrip("/")
 
         if app.config.get("PROXY_PREFIX"):
             app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config.get("PROXY_PREFIX").rstrip("/"))

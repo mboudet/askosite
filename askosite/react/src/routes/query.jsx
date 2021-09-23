@@ -455,7 +455,7 @@ export default class Query extends Component {
       return
     }
 
-    axios.post(requestUrl, data, { baseURL: this.state.config.askomicsPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+    axios.post(requestUrl, data, { baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
       .then(response => {
         this.setState({
           resultsPreview: response.data.resultsPreview,
@@ -482,7 +482,7 @@ export default class Query extends Component {
   componentDidMount () {
     if (!this.props.waitForStart) {
       let requestUrl = '/api/query/abstraction'
-      axios.get(requestUrl, { baseURL: this.state.config.askomicsPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+      axios.get(requestUrl, { baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
         .then(response => {
           this.setState({
             waiting: false,

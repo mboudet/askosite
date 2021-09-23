@@ -20,9 +20,6 @@ export default class Routes extends Component {
       waiting: true,
       config: {
         proxyPath: document.getElementById('proxy_path').getAttribute('proxy_path'),
-        askomicsUrl: "",
-        excludedEntities: [],
-        excludedAttributes: [],
         perPage: 30,
       }
     }
