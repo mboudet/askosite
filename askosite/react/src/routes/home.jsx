@@ -1,5 +1,6 @@
 import React, { Component, lazy, Suspense } from 'react'
-import { Badge, Button, Card, CardTitle, CardBody, CardText, Form, FormGroup, Input, Label, Row, Col, ButtonGroup, CustomInput, Alert} from 'reactstrap'
+import { Badge, Button, Card, CardTitle, CardBody, CardText, Form, FormGroup, Input, Label, Row, Col, ButtonGroup, CustomInput, Alert, InputGroup} from 'reactstrap'
+import { Redirect, Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import WaitingDiv from './waiting'
 import ErrorDiv from './error'
@@ -20,12 +21,19 @@ export default class Home extends Component {
     }
     this.cancelRequest
     this.handleStart = this.handleStart.bind(this)
+    this.handleClick = this.handleClick.bind(this)
     this.handleFilter = this.handleFilter.bind(this)
   }
 
   handleStart (event) {
     this.setState({
       startSession: true
+    })
+  }
+
+  handleClick (event) {
+    this.setState({
+      selected: event.target.id
     })
   }
 
@@ -54,11 +62,11 @@ export default class Home extends Component {
         let requestUrl = '/api/startpoints'
         axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
           .then(response => {
-
-            this.setState({
+            var excludedEntities = this.props.config.excludedEntities
+	    this.setState({
               waiting: false,
               startpoints: response.data.startpoints.reduce(function(filtered, startpoint) {
-                if (! this.props.config.excludedEntities.includes(startpoint.entity)){
+                if (! excludedEntities.includes(startpoint.entity)){
                   filtered.push({
                     graphs: startpoint.graphs,
                     entity: startpoint.entity,
@@ -94,7 +102,7 @@ export default class Home extends Component {
     let redirectQueryBuilder
     if (this.state.startSession) {
       redirectQueryBuilder = <Redirect to={{
-        pathname: '/entity',
+        pathname: '/query',
         state: {
           config: this.props.config,
           startpoint: this.state.selected
@@ -118,14 +126,20 @@ export default class Home extends Component {
       startpoints = (
         <div>
           <p>Select an entity to start a session:</p>
+          <div className="startpoints-filter-div">
+            <InputGroup>
+              <Input placeholder="Filter entities" onChange={this.handleFilter} />
+            </InputGroup>
+
+          </div>
+
           <div className="startpoints-div">
             {this.state.startpoints.map(startpoint => {
-              let display = false
               return (
               <div key={startpoint.entity} className="input-label" id={startpoint.entity_label}>
               <input className="startpoint-radio" value={startpoint.entity_label} type="radio" name="startpoints" id={startpoint.entity} onClick={this.handleClick}></input>
               <label className="startpoint-label" id={startpoint.name} htmlFor={startpoint.entity}>
-              <table hidden={startpoint.hidden ? 'hidden' : display ? '' : 'hidden'} className="startpoint-table">
+              <table hidden={startpoint.hidden ? 'hidden' : '' } className="startpoint-table">
                 <tr>
                   <td className="startpoint-table cell1">
                       {startpoint.entity_label}
@@ -143,13 +157,22 @@ export default class Home extends Component {
     }
 
     let welcomeMessage = (
-      <p>Welcome to Askosite!</p>,
+      <div>
+      <p>Welcome to Askosite!</p>
       <p>Please select an entity on the left side to start:</p>
+      </div>
+    )
+
+    let frontMessage = (
+	<div><h2>Welcome to Askosite</h2>
+        <hr />
+        </div>
     )
 
     return (
       <div className="container">
         {redirectQueryBuilder}
+        { frontMessage }
         <WaitingDiv waiting={this.state.waiting} center />
           <Row>
             <Col xs="5">

@@ -49,7 +49,6 @@ export default class Query extends Component {
     this.cancelRequest
 
     this.handlePreview = this.handlePreview.bind(this)
-    this.handleQuery = this.handleQuery.bind(this)
   }
 
   getLabel (uri) {
@@ -62,6 +61,13 @@ export default class Query extends Component {
     }).filter(label => label != null).reduce(label => label)
   }
 
+  getEntityUris (uri) {
+    return [...new Set(this.state.abstraction.attributes.flatMap(attr => {
+      if (attr.uri == uri) {
+        return attr.entityUri
+      }
+    }).filter(entityUri => entityUri != null))]
+  }
 
   isFaldoEntity (entityUri) {
     return this.state.abstraction.entities.some(entity => {
@@ -74,6 +80,14 @@ export default class Query extends Component {
       previewIcon: "table"
     })
   }
+
+
+  attributeExist (attrUri) {
+    return this.graphState.attr.some(attr => {
+      return (attr.uri == attrUri && attr.nodeId == 0)
+    })
+  }  
+
 
   getAttributeType (typeUri) {
     // FIXME: don't hardcode uri
@@ -94,6 +108,12 @@ export default class Query extends Component {
     }
   }
 
+  nodeHaveInstancesWithLabel (uri) {
+    return this.state.abstraction.entities.some(entity => {
+      return (entity.uri == uri && entity.instancesHaveLabels)
+    })
+  }
+
   count_displayed_attributes() {
     return this.graphState.attr.map(attr => {
       return attr.visible ? 1 : 0
@@ -101,6 +121,9 @@ export default class Query extends Component {
   }
 
   setNodeAttributes (nodeUri) {
+ 
+    let labelExist = this.nodeHaveInstancesWithLabel(nodeUri)
+
     let nodeAttributes = []
     let id = 0
     nodeAttributes.push({
@@ -127,7 +150,7 @@ export default class Query extends Component {
 
     id += 1
     // create label attributes
-    if (!this.attributeExist('rdfs:label', nodeId) && labelExist) {
+    if (!this.attributeExist('rdfs:label') && labelExist) {
       nodeAttributes.push({
         id: id,
         visible: true,
@@ -155,7 +178,7 @@ export default class Query extends Component {
     // create other attributes
     nodeAttributes = nodeAttributes.concat(this.state.abstraction.attributes.map(attr => {
       let attributeType = this.getAttributeType(attr.type)
-      if (attr.entityUri == nodeUri && !this.attributeExist(attr.uri, nodeId)) {
+      if (attr.entityUri == nodeUri && !this.attributeExist(attr.uri)) {
         let nodeAttribute = {
           id: id,
           visible: false,
@@ -455,7 +478,7 @@ export default class Query extends Component {
       return
     }
 
-    axios.post(requestUrl, data, { baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+    axios.post(requestUrl, data, { baseURL: this.state.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
       .then(response => {
         this.setState({
           resultsPreview: response.data.resultsPreview,
@@ -481,8 +504,8 @@ export default class Query extends Component {
 
   componentDidMount () {
     if (!this.props.waitForStart) {
-      let requestUrl = '/api/query/abstraction'
-      axios.get(requestUrl, { baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+      let requestUrl = '/api/abstraction'
+      axios.get(requestUrl, { baseURL: this.state.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
         .then(response => {
           this.setState({
             waiting: false,
@@ -536,11 +559,11 @@ export default class Query extends Component {
     let removeButton
     let graphFilters
 
+    console.log(this.state.graphState.attr)
+
     if (!this.state.waiting) {
       // attribute boxes (right view) only for node
-      if (this.currentSelected) {
         AttributeBoxes = this.state.graphState.attr.map(attribute => {
-          if (attribute.nodeId == this.currentSelected.id && this.currentSelected.type == "node") {
             return (
               <AttributeBox
                 attribute={attribute}
@@ -564,10 +587,8 @@ export default class Query extends Component {
                 config={this.state.config}
               />
             )
-          }
         })
         // Link view (rightview)
-      }
       // buttons
       let previewIcon = <i className={"fas fa-" + this.state.previewIcon}></i>
       if (this.state.previewIcon == "spinner") {
@@ -604,7 +625,6 @@ export default class Query extends Component {
             </div>
           </Col>
         </Row>
-        {warningDiskSpace}
         <ButtonGroup>
           {previewButton}
         </ButtonGroup>

@@ -9,6 +9,8 @@ def config():
     # Return config here
     config = {
         "proxyPath": current_app.config.get('PROXY_PREFIX', '/'),
+        "excludedEntities": current_app.config.get('EXCLUDED_ENTITIES', []),
+        "excludedAttributes": current_app.config.get('EXCLUDED_ATTRIBUTES', [])
     }
 
     json = {

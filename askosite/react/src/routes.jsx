@@ -20,6 +20,8 @@ export default class Routes extends Component {
       waiting: true,
       config: {
         proxyPath: document.getElementById('proxy_path').getAttribute('proxy_path'),
+        excludedEntities: [],
+        excludedAttributes: [],
         perPage: 30,
       }
     }
@@ -56,9 +58,9 @@ export default class Routes extends Component {
         <div>
           <AskositeNavigation config={this.state.config} />
           <Switch>
-            <Route path="/" exact component={() => (<Home config={this.state.config} />)} />
+            <Route path="/" exact component={() => (<Home waitForStart={this.state.waiting} config={this.state.config} />)} />
             <Route path="/about" exact component={() => (<About config={this.state.config} />)} />
-            <Route path="/entity" exact component={() => (<Entity config={this.state.config} />)} />
+            <Route path="/query" exact component={Query} />
           </Switch>
           <br />
           <br />
