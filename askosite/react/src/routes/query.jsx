@@ -267,7 +267,7 @@ export default class Query extends Component {
     return node
   }
 
-  updateGraphState (waiting=this.state.waiting) {
+  updateGraphState (waiting=this.state.waiting, sendQuery=false) {
     this.setState({
       graphState: this.graphState,
       previewIcon: "table",
@@ -277,12 +277,16 @@ export default class Query extends Component {
       disablePreview: false,
       saveIcon: "play",
       waiting: waiting
+    }, () => {
+      if (sendQuery){
+        this.handlePreview()
+      }
     })
   }
 
   initGraph () {
     this.insertNode(this.state.startpoint)
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   // Attributes managment -----------------------
@@ -458,7 +462,7 @@ export default class Query extends Component {
   // Preview results and Launch query buttons -------
 
   handlePreview (event) {
-    let requestUrl = '/api/query/preview'
+    let requestUrl = '/api/query'
     let data = {
       graphState: this.graphState
     }
@@ -559,8 +563,6 @@ export default class Query extends Component {
     let removeButton
     let graphFilters
 
-    console.log(this.state.graphState.attr)
-
     if (!this.state.waiting) {
       // attribute boxes (right view) only for node
         AttributeBoxes = this.state.graphState.attr.map(attribute => {
@@ -614,24 +616,21 @@ export default class Query extends Component {
         <WaitingDiv waiting={this.state.waiting} center />
         <br />
         <Row>
-          <Col xs="7">
-            <div>
-            </div>
-          </Col>
-          <Col xs="5">
+          <Col xs="3">
             <div style={{ display: 'block', height: this.divHeight + 'px', 'overflow-y': 'auto' }}>
               {uriLabelBoxes}
               {AttributeBoxes}
+            </div>
+          </Col>
+          <Col xs="9">
+            <div>
+            {resultsTable}
             </div>
           </Col>
         </Row>
         <ButtonGroup>
           {previewButton}
         </ButtonGroup>
-        <br /> <br />
-        <div>
-          {resultsTable}
-        </div>
         <ErrorDiv status={this.state.status} error={this.state.error} errorMessage={this.state.errorMessage} customMessages={{"504": "Query time is too long, use Run & Save to get your results", "502": "Query time is too long, use Run & Save to get your results"}} />
       </div>
     )

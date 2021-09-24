@@ -23,6 +23,7 @@ export default class Routes extends Component {
         excludedEntities: [],
         excludedAttributes: [],
         perPage: 30,
+        namespaceInternal: 'http://askomics.org/internal/'
       }
     }
     this.cancelRequest

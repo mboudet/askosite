@@ -158,13 +158,13 @@ export default class Home extends Component {
 
     let welcomeMessage = (
       <div>
-      <p>Welcome to Askosite!</p>
-      <p>Please select an entity on the left side to start:</p>
+      <p>Welcome to Askosite, the data catalog for AskOmics.</p>
+      <p>Please select an entity type on the left side to list all entities available.</p>
       </div>
     )
 
     let frontMessage = (
-	<div><h2>Welcome to Askosite</h2>
+	<div><h2>Welcome to Askosite!</h2>
         <hr />
         </div>
     )

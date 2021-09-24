@@ -44,30 +44,6 @@ export default class AttributeBox extends Component {
     return newStr
   }
 
-  renderLinker () {
-    let options = []
-
-    this.props.graph.nodes.map(node => {
-      if (!node.suggested) {
-        options.push(<option style={{"background-color": "#cccccc"}} disabled>{node.label + " " + this.subNums(node.humanId)}</option>)
-        this.props.graph.attr.map(attr => {
-          if (attr.id != this.props.attribute.id && attr.nodeId == node.id && attr.type == this.props.attribute.type) {
-            options.push(<option key={attr.id} value={attr.id} selected={this.props.attribute.linkedWith == attr.id ? true : false}>{attr.label}</option>)
-          }
-        })
-      }
-    })
-
-    return (
-        <CustomInput type="select" id={this.props.attribute.id} name="link" onChange={this.handleChangeLink}>
-          <option style={{"background-color": "#cccccc"}} disabled selected>{"Link with a " + this.props.attribute.type + " attribute"}</option>
-          {options.map(opt => {
-            return opt
-          })}
-        </CustomInput>
-      )
-  }
-
   checkUnvalidUri (value) {
     if (value == "") {
       return false
@@ -78,64 +54,6 @@ export default class AttributeBox extends Component {
         return !this.utils.isUrl(value)
       }
     }
-  }
-
-  renderUri () {
-
-    let formIcon = 'attr-icon fas fa-bookmark inactive'
-    if (this.props.attribute.form) {
-      formIcon = 'attr-icon fas fa-bookmark '
-    }
-
-    let eyeIcon = 'attr-icon fas fa-eye-slash inactive'
-    if (this.props.attribute.visible) {
-      eyeIcon = 'attr-icon fas fa-eye'
-    }
-
-    let linkIcon = 'attr-icon fas fa-unlink inactive'
-    if (this.props.attribute.linked) {
-      linkIcon = 'attr-icon fas fa-link'
-    }
-
-    let selected_sign = {
-      '=': !this.props.attribute.negative,
-      "≠": this.props.attribute.negative
-    }
-
-    let form
-
-    if (this.props.attribute.linked) {
-      form = this.renderLinker()
-    } else {
-      form = (
-        <table style={{ width: '100%' }}>
-          <tr>
-            <td>
-              <CustomInput disabled={this.props.attribute.optional} type="select" id={this.props.attribute.id} onChange={this.handleNegative}>
-                {Object.keys(selected_sign).map(type => {
-                  return <option key={type} selected={selected_sign[type]} value={type}>{type}</option>
-                })}
-              </CustomInput>
-            </td>
-            <td>
-              <Input invalid={this.checkUnvalidUri(this.props.attribute.filterValue)} disabled={this.props.attribute.optional} type="text" id={this.props.attribute.id} value={this.props.attribute.filterValue} onChange={this.handleFilterValue} />
-              <FormFeedback tooltip>Please filter with a valid URI or CURIE</FormFeedback>
-            </td>
-          </tr>
-        </table>
-      )
-    }
-
-    return (
-      <div className="attribute-box">
-        <label className="attr-label">{this.props.attribute.label}</label>
-        <div className="attr-icons">
-          <i className={linkIcon} id={this.props.attribute.id} onClick={this.toggleLinkAttribute}></i>
-          <i className={eyeIcon} id={this.props.attribute.id} onClick={this.toggleVisibility}></i>
-        </div>
-        {form}
-      </div>
-    )
   }
 
   renderText () {
@@ -211,9 +129,6 @@ export default class AttributeBox extends Component {
       <div className="attribute-box">
         <label className="attr-label">{this.props.attribute.label}</label>
         <div className="attr-icons">
-          <i className={linkIcon} id={this.props.attribute.id} onClick={this.toggleLinkAttribute}></i>
-          {this.props.attribute.uri == "rdf:type" || this.props.attribute.uri == "rdfs:label" ? <nodiv></nodiv> : <i className={optionalIcon} id={this.props.attribute.id} onClick={this.toggleOptional}></i> }
-          <i className={eyeIcon} id={this.props.attribute.id} onClick={this.toggleVisibility}></i>
         </div>
         {form}
       </div>
@@ -286,9 +201,6 @@ export default class AttributeBox extends Component {
       <div className="attribute-box">
         <label className="attr-label">{this.props.attribute.label}</label>
         <div className="attr-icons">
-          <i className={linkIcon} id={this.props.attribute.id} onClick={this.toggleLinkAttribute}></i>
-          <i className={optionalIcon} id={this.props.attribute.id} onClick={this.toggleOptional}></i>
-          <i className={eyeIcon} id={this.props.attribute.id} onClick={this.toggleVisibility}></i>
         </div>
         {form}
       </div>
@@ -343,10 +255,7 @@ export default class AttributeBox extends Component {
       <div className="attribute-box">
         <label className="attr-label">{this.props.attribute.label}</label>
         <div className="attr-icons">
-          <i className={linkIcon} id={this.props.attribute.id} onClick={this.toggleLinkAttribute}></i>
-          <i className={optionalIcon} id={this.props.attribute.id} onClick={this.toggleOptional}></i>
           <i className={excludeIcon} id={this.props.attribute.id} onClick={this.toggleExclude}></i>
-          <i className={eyeIcon} id={this.props.attribute.id} onClick={this.toggleVisibility}></i>
         </div>
         {form}
       </div>
@@ -394,9 +303,6 @@ export default class AttributeBox extends Component {
       <div className="attribute-box">
         <label className="attr-label">{this.props.attribute.label}</label>
         <div className="attr-icons">
-          <i className={linkIcon} id={this.props.attribute.id} onClick={this.toggleLinkAttribute}></i>
-          <i className={optionalIcon} id={this.props.attribute.id} onClick={this.toggleOptional}></i>
-          <i className={eyeIcon} id={this.props.attribute.id} onClick={this.toggleVisibility}></i>
         </div>
         {form}
       </div>
@@ -477,9 +383,6 @@ export default class AttributeBox extends Component {
       <div className="attribute-box">
         <label className="attr-label">{this.props.attribute.label}</label>
         <div className="attr-icons">
-          <i className={linkIcon} id={this.props.attribute.id} onClick={this.toggleLinkAttribute}></i>
-          <i className={optionalIcon} id={this.props.attribute.id} onClick={this.toggleOptional}></i>
-          <i className={eyeIcon} id={this.props.attribute.id} onClick={this.toggleVisibility}></i>
         </div>
         {form}
       </div>
@@ -489,7 +392,7 @@ export default class AttributeBox extends Component {
 
   render () {
     let box = null
-    if (this.props.attribute.type == 'text' || this.props.attribute.type == 'uri') {
+    if (this.props.attribute.type == 'text') {
       box = this.renderText()
     }
     if (this.props.attribute.type == 'decimal') {

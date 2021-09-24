@@ -74,6 +74,8 @@ export default class ResultsTable extends Component {
 
     return (
       <div>
+        <h2>{this.props.data.length} result(s) found:</h2>
+        <br/>
         <div className="asko-table-height-div">
           <BootstrapTable
             classes="asko-table"

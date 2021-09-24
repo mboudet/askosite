@@ -10,7 +10,9 @@ def config():
     config = {
         "proxyPath": current_app.config.get('PROXY_PREFIX', '/'),
         "excludedEntities": current_app.config.get('EXCLUDED_ENTITIES', []),
-        "excludedAttributes": current_app.config.get('EXCLUDED_ATTRIBUTES', [])
+        "excludedAttributes": current_app.config.get('EXCLUDED_ATTRIBUTES', []),
+	# Could be infered from config api call
+        "namespaceInternal": current_app.config.get("NAMESPACE_INTERNAL", "http://askomics.org/internal/")
     }
 
     json = {
