@@ -118,7 +118,7 @@ export default class AttributeBox extends Component {
               </CustomInput>
             </td>
             <td>
-              <Input disabled={this.props.attribute.optional} type="text" id={this.props.attribute.id} value={this.props.attribute.filterValue} onclick={this.handleFilterValue} onBlur={this.handleFilterValue(this, true)} />
+              <Input disabled={this.props.attribute.optional} type="text" id={this.props.attribute.id} value={this.props.attribute.filterValue} onclick={this.handleFilterValue} onBlur={this.handleFilterValue.bind(this, true)} />
             </td>
           </tr>
         </table>
@@ -186,7 +186,7 @@ export default class AttributeBox extends Component {
               </td>
                 <td>
                   <div className="input-with-icon">
-                    <Input data-index={index} className="input-with-icon" disabled={this.props.attribute.optional} type="text" id={this.props.attribute.id} value={filter.filterValue} onClick={this.handleFilterNumericValue} onBlur={this.handleFilterNumericValue(this, true)} />
+                    <Input data-index={index} className="input-with-icon" disabled={this.props.attribute.optional} type="text" id={this.props.attribute.id} value={filter.filterValue} onClick={this.handleFilterNumericValue} onBlur={this.handleFilterNumericValue.bind(this, true)} />
                     {index == numberOfFilters ? <button className="input-with-icon"><i className="attr-icon fas fa-plus inactive" id={this.props.attribute.id} onClick={this.toggleAddNumFilter}></i></button> : <></>}
                   </div>
                 </td>
