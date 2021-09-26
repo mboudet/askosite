@@ -86,7 +86,7 @@ export default class Query extends Component {
     return this.graphState.attr.some(attr => {
       return (attr.uri == attrUri && attr.nodeId == 0)
     })
-  }  
+  }
 
 
   getAttributeType (typeUri) {
@@ -121,7 +121,7 @@ export default class Query extends Component {
   }
 
   setNodeAttributes (nodeUri) {
- 
+
     let labelExist = this.nodeHaveInstancesWithLabel(nodeUri)
 
     let nodeAttributes = []
@@ -271,9 +271,6 @@ export default class Query extends Component {
     this.setState({
       graphState: this.graphState,
       previewIcon: "table",
-      resultsPreview: [],
-      headerPreview: [],
-      disableSave: false,
       disablePreview: false,
       saveIcon: "play",
       waiting: waiting
@@ -290,17 +287,6 @@ export default class Query extends Component {
   }
 
   // Attributes managment -----------------------
-  toggleVisibility (event) {
-    this.graphState.attr.map(attr => {
-      if (attr.id == event.target.id) {
-        attr.visible = !attr.visible
-        if (!attr.visible) {
-          attr.optional = false
-        }
-      }
-    })
-    this.updateGraphState()
-  }
 
   toggleExclude (event) {
     this.graphState.attr.map(attr => {
@@ -311,28 +297,7 @@ export default class Query extends Component {
         }
       }
     })
-    this.updateGraphState()
-  }
-
-  toggleOptional (event) {
-    this.graphState.attr.map(attr => {
-      if (attr.id == event.target.id) {
-        attr.optional = !attr.optional
-        if (attr.optional) {
-          attr.visible = true
-        }
-      }
-    })
-    this.updateGraphState()
-  }
-
-  toggleFormAttribute (event) {
-    this.graphState.attr.map(attr => {
-      if (attr.id == event.target.id) {
-        attr.form = !attr.form
-      }
-    })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   handleNegative (event) {
@@ -341,7 +306,7 @@ export default class Query extends Component {
         attr.negative = event.target.value == '=' ? false : true
       }
     })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   handleFilterType (event) {
@@ -350,7 +315,7 @@ export default class Query extends Component {
         attr.filterType = event.target.value
       }
     })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   handleFilterValue (event) {
@@ -359,7 +324,7 @@ export default class Query extends Component {
         attr.filterValue = event.target.value
       }
     })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   handleFilterCategory (event) {
@@ -368,7 +333,7 @@ export default class Query extends Component {
         attr.filterSelectedValues = [...event.target.selectedOptions].map(o => o.value)
       }
     })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   handleFilterNumericSign (event) {
@@ -381,7 +346,7 @@ export default class Query extends Component {
         })
       }
     })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   toggleAddNumFilter (event) {
@@ -407,7 +372,7 @@ export default class Query extends Component {
           })
         }
       })
-      this.updateGraphState()
+      this.updateGraphState(this.state.waiting, true)
     }
   }
 
@@ -421,7 +386,7 @@ export default class Query extends Component {
         })
       }
     })
-    this.updateGraphState()
+    this.updateGraphState(this.state.waiting, true)
   }
 
   toggleAddDateFilter (event) {
@@ -455,7 +420,7 @@ export default class Query extends Component {
           })
         }
       })
-      this.updateGraphState()
+      this.updateGraphState(this.state.waiting, true)
     }
   }
 
@@ -470,17 +435,6 @@ export default class Query extends Component {
       disablePreview: true,
       previewIcon: "spinner"
     })
-
-    // display an error message if user don't display attribute to avoid the virtuoso SPARQL error
-    if (this.count_displayed_attributes() == 0) {
-      this.setState({
-        error: true,
-        errorMessage: ["No attribute are displayed. Use eye icon to display at least one attribute", ],
-        disablePreview: false,
-        previewIcon: "times text-error"
-      })
-      return
-    }
 
     axios.post(requestUrl, data, { baseURL: this.state.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
       .then(response => {
@@ -590,14 +544,6 @@ export default class Query extends Component {
               />
             )
         })
-        // Link view (rightview)
-      // buttons
-      let previewIcon = <i className={"fas fa-" + this.state.previewIcon}></i>
-      if (this.state.previewIcon == "spinner") {
-        previewIcon = <Spinner size="sm" color="light" />
-      }
-      previewButton = <Button onClick={this.handlePreview} color="secondary" disabled={this.state.disablePreview}>{previewIcon} Run & preview</Button>
-
     }
 
     // preview
@@ -628,9 +574,6 @@ export default class Query extends Component {
             </div>
           </Col>
         </Row>
-        <ButtonGroup>
-          {previewButton}
-        </ButtonGroup>
         <ErrorDiv status={this.state.status} error={this.state.error} errorMessage={this.state.errorMessage} customMessages={{"504": "Query time is too long, use Run & Save to get your results", "502": "Query time is too long, use Run & Save to get your results"}} />
       </div>
     )
