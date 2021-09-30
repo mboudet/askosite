@@ -318,13 +318,13 @@ export default class Query extends Component {
     this.updateGraphState(this.state.waiting, true)
   }
 
-  handleFilterValue (event, reload = false) {
+  handleFilterValue (event) {
     this.graphState.attr.map(attr => {
       if (attr.id == event.target.id) {
         attr.filterValue = event.target.value
       }
     })
-    this.updateGraphState(this.state.waiting, reload)
+    this.updateGraphState(this.state.waiting, true)
   }
 
   handleFilterCategory (event) {
@@ -361,7 +361,7 @@ export default class Query extends Component {
     this.updateGraphState()
   }
 
-  handleFilterNumericValue (event, reload = false) {
+  handleFilterNumericValue (event) {
     if (!isNaN(event.target.value)) {
       this.graphState.attr.map(attr => {
         if (attr.id == event.target.id) {
@@ -372,7 +372,7 @@ export default class Query extends Component {
           })
         }
       })
-      this.updateGraphState(this.state.waiting, reload)
+      this.updateGraphState(this.state.waiting, true)
     }
   }
 
