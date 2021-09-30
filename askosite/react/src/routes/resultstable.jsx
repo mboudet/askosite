@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
+import { Redirect } from 'react-router-dom'
 import WaitingDiv from './waiting'
-import { Badge } from 'reactstrap'
+import { Badge, Button } from 'reactstrap'
 import PropTypes from 'prop-types'
 import Utils from './utils'
 import update from 'immutability-helper';
@@ -15,6 +16,7 @@ export default class ResultsTable extends Component {
     }
     this.utils = new Utils()
     this.custom_compare = this.custom_compare.bind(this)
+    this.handleData = this.handleData.bind(this)
   }
 
   custom_compare(a, b, column_name){
@@ -40,6 +42,31 @@ export default class ResultsTable extends Component {
     return result;
   }
 
+  handleData (event) {
+    // request api to get a preview of file
+    let requestUrl = '/api/data/' + event.target.id
+    axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+      .then(response => {
+        console.log(requestUrl, response.data)
+        // set state of resultsPreview
+        this.setState({
+          redirectUri: true,
+          data: response.data
+        })
+      })
+      .catch(error => {
+        console.log(error, error.response.data.errorMessage)
+        this.setState({
+          error: true,
+          errorMessage: error.response.data.errorMessage,
+          status: error.response.status,
+          waiting: false
+        })
+      })
+  }
+
+
+
   componentDidMount () {
     let filter_columns = {}
     this.props.header.map((colName, index) => {
@@ -51,6 +78,20 @@ export default class ResultsTable extends Component {
   }
 
   render () {
+
+    let redirectUri
+    if (this.state.redirectUri) {
+      redirectUri = <Redirect to={{
+          pathname: '/data',
+          state: {
+            data: this.state.data,
+            entity: this.props.entity,
+            config: this.props.config
+          }
+      }} />
+    }
+
+
     let columns = this.props.header.map((colName, index) => {
       return ({
         dataField: colName,
@@ -59,7 +100,11 @@ export default class ResultsTable extends Component {
         index: index,
         formatter: (cell, row) => {
           if (this.utils.isUrl(cell)) {
-            return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
+            if (cell.startsWith(this.props.config.namespaceInternal)){
+                return <Button id={this.utils.splitUrl(cell)} color="link" onClick={this.handleData}>{this.utils.splitUrl(cell)}</Button>
+            } else {
+                return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
+            }
           }
           return cell
         },
@@ -97,4 +142,6 @@ export default class ResultsTable extends Component {
 ResultsTable.propTypes = {
   header: PropTypes.object,
   data: PropTypes.object,
+  entity: PropTypes.string,
+  config: PropTypes.object
 }

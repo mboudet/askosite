@@ -550,7 +550,7 @@ export default class Query extends Component {
     let resultsTable
     if (this.state.headerPreview.length > 0) {
       resultsTable = (
-        <ResultsTable data={this.state.resultsPreview} header={this.state.headerPreview} />
+        <ResultsTable data={this.state.resultsPreview} header={this.state.headerPreview} config={this.state.config} entity={this.props.location.state.startpoint} />
       )
     }
 

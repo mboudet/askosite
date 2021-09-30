@@ -5,6 +5,7 @@ import axios from 'axios'
 import About from './routes/about'
 import Home from './routes/home'
 import Query from './routes/query'
+import Data from './routes/data'
 import AskositeNavigation from './navigation'
 
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css'
@@ -23,7 +24,8 @@ export default class Routes extends Component {
         excludedEntities: [],
         excludedAttributes: [],
         perPage: 30,
-        namespaceInternal: 'http://askomics.org/internal/'
+        namespaceInternal: 'http://askomics.org/internal/',
+        namespaceData: 'http://askomics.org/data/'
       }
     }
     this.cancelRequest
@@ -62,6 +64,7 @@ export default class Routes extends Component {
             <Route path="/" exact component={() => (<Home waitForStart={this.state.waiting} config={this.state.config} />)} />
             <Route path="/about" exact component={() => (<About config={this.state.config} />)} />
             <Route path="/query" exact component={Query} />
+            <Route path="/data" exact component={Data} />
           </Switch>
           <br />
           <br />

@@ -8,6 +8,7 @@ from askosite.api.query import query
 
 from .middleware import PrefixMiddleware
 
+import requests
 
 __all__ = ('create_app', )
 
@@ -27,7 +28,6 @@ CONFIG_KEYS = (
     'ASKOMICS_URL',
     'EXCLUDED_ATTRIBUTES',
     'EXCLUDED_ENTITIES',
-    'NAMESPACE_INTERNAL'
 )
 
 
@@ -68,6 +68,8 @@ def create_app(config=None, app_name='askosite', blueprints=None, run_mode=None,
             raise Exception("Missing ASKOMICS_URL")
 
         app.config["ASKOMICS_URL"] = app.config["ASKOMICS_URL"].rstrip("/")
+
+        app.config["NAMESPACE_DATA"], app.config["NAMESPACE_INTERNAL"] = _check_askomics(app.config)
 
         if app.config.get("PROXY_PREFIX"):
             app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app.config.get("PROXY_PREFIX").rstrip("/"))
@@ -137,3 +139,12 @@ def _merge_conf_with_env_vars(config):
             config[key] = envval
 
     return config
+
+
+def _check_askomics(config):
+    url = "%s/api/start" % config.get("ASKOMICS_URL")
+    res = requests.get(url)
+    # TODO : Maybe restrict compatible versions here?
+    if not res.status_code == 200:
+        raise Exception("Cannot access Askomics: error {}".format(res.status_code))
+    return res.json["namespaceData"], res.json["namespaceInternal"]
