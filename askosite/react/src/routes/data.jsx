@@ -48,12 +48,6 @@ class Data extends Component {
       })
   }
 
-  componentWillUnmount () {
-    if (!this.props.waitForStart) {
-      this.cancelRequest()
-    }
-  }
-
   render () {
     let uri = this.state.uri
 
