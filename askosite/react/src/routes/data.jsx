@@ -13,28 +13,24 @@ class Data extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      config: this.props.location.state.config,
-      data: this.props.location.state.data,
-      uri: this.props.location.state.uri,
+      isLoading: true,
+      data: [],
       error: false,
       errorMessage: '',
     }
     this.utils = new Utils()
-    this.handleData = this.handleData.bind(this)
+    this.cancelRequest
   }
 
-  handleData (event) {
+  loadData (event) {
     // request api to get a preview of file
-    let target = event.target.id
+    let uri = this.props.match.params.uri;
     let requestUrl = '/api/data/' + target
     axios.get(requestUrl, {baseURL: this.state.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
       .then(response => {
-        console.log(requestUrl, response.data)
-        // set state of resultsPreview
         this.setState({
-          redirectUri: true,
+          isLoading: false,
           data: response.data.data,
-          uri: target
         })
       })
       .catch(error => {
@@ -48,6 +44,12 @@ class Data extends Component {
       })
   }
 
+  componentDidMount () {
+    if (!this.props.waitForStart) {
+      this.loadData()
+    }
+  }
+
   componentWillUnmount () {
     if (!this.props.waitForStart) {
       this.cancelRequest()
@@ -55,7 +57,7 @@ class Data extends Component {
   }
 
   render () {
-    let uri = this.state.uri
+    let uri = this.props.match.params.uri;
 
     let columns = [{
       dataField: 'predicate',
@@ -76,7 +78,7 @@ class Data extends Component {
           if (cell.startsWith(this.state.config.namespaceInternal)){
             return this.utils.getUri(cell, this.state.config.namespaceInternal)
           } else if (cell.startsWith(this.state.config.namespaceData)) {
-            return <Button id={this.utils.getUri(cell, this.state.config.namespaceData)} color="link" onClick={this.handleData}>{this.utils.getUri(cell, this.state.config.namespaceData)}</Button>
+            return <a href={"/data/" + this.utils.getUri(cell, this.state.config.namespaceData)}>{this.utils.getUri(cell, this.state.config.namespaceData)}</a>
           } else {
             return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
           }
@@ -109,7 +111,9 @@ class Data extends Component {
 }
 
 Data.propTypes = {
-  location: PropTypes.object,
+  waitForStart: PropTypes.bool,
+  config: PropTypes.object,
+  match: PropTypes.object
 }
 
 export default withRouter(Data)

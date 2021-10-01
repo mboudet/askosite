@@ -19,7 +19,6 @@ export default class ResultsTable extends Component {
     }
     this.utils = new Utils()
     this.custom_compare = this.custom_compare.bind(this)
-    this.handleData = this.handleData.bind(this)
   }
 
   custom_compare(a, b, column_name){
@@ -45,32 +44,6 @@ export default class ResultsTable extends Component {
     return result;
   }
 
-  handleData (event) {
-    // request api to get a preview of file
-    let target = event.target.id
-    let requestUrl = '/api/data/' + target
-    axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
-      .then(response => {
-        // set state of resultsPreview
-        this.setState({
-          redirectUri: true,
-          data: response.data.data,
-          uri: target
-        })
-      })
-      .catch(error => {
-        console.log(error, error.response.data.errorMessage)
-        this.setState({
-          error: true,
-          errorMessage: error.response.data.errorMessage,
-          status: error.response.status,
-          waiting: false
-        })
-      })
-  }
-
-
-
   componentDidMount () {
     let filter_columns = {}
     this.props.header.map((colName, index) => {
@@ -83,19 +56,6 @@ export default class ResultsTable extends Component {
 
   render () {
 
-    let redirectUri
-    if (this.state.redirectUri) {
-      redirectUri = <Redirect to={{
-          pathname: '/data',
-          state: {
-            data: this.state.data,
-            uri: this.state.uri,
-            config: this.props.config
-          }
-      }} />
-    }
-
-
     let columns = this.props.header.map((colName, index) => {
       return ({
         dataField: colName,
@@ -105,7 +65,7 @@ export default class ResultsTable extends Component {
         formatter: (cell, row) => {
           if (this.utils.isUrl(cell)) {
             if (cell.startsWith(this.props.config.namespaceData)){
-                return <Button id={this.utils.getUri(cell, this.props.config.namespaceData)} color="link" onClick={this.handleData}>{this.utils.getUri(cell, this.props.config.namespaceData)}</Button>
+                return <a href={"/data/" + this.utils.getUri(cell, this.props.config.namespaceData)} target="_blank">{this.utils.getUri(cell, this.props.config.namespaceData)}</a>
             } else {
                 return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
             }
@@ -123,7 +83,6 @@ export default class ResultsTable extends Component {
 
     return (
       <div>
-        {redirectUri}
         <h2>{this.props.data.length} result(s) found:</h2>
         <br/>
         <div className="asko-table-height-div">

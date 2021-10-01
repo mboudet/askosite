@@ -64,7 +64,7 @@ export default class Routes extends Component {
             <Route path="/" exact component={() => (<Home waitForStart={this.state.waiting} config={this.state.config} />)} />
             <Route path="/about" exact component={() => (<About config={this.state.config} />)} />
             <Route path="/query" exact component={Query} />
-            <Route path="/data" exact component={Data} />
+            <Route path="/data/:uri" exact component={() => (<Data config={this.state.config} waitForStart={this.state.waiting} />)} />
           </Switch>
           <br />
           <br />
