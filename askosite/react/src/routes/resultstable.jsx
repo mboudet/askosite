@@ -56,34 +56,37 @@ export default class ResultsTable extends Component {
 
   render () {
 
-    let columns = this.props.header.map((colName, index) => {
-      return ({
-        dataField: colName,
-        text: colName,
+    let entity = this.utils.getUri(this.props.entity, this.props.config.namespaceData)
+
+    let uriColumn = this.props.header[0]
+    let labelColumn = this.props.header[1]
+
+    let columns = [{
+        dataField: uriColumn,
         sort: true,
-        index: index,
+        text: entity,
+        index: 0,
         formatter: (cell, row) => {
           if (this.utils.isUrl(cell)) {
             if (cell.startsWith(this.props.config.namespaceData)){
-                return <a href={"/data/" + this.utils.getUri(cell, this.props.config.namespaceData)} target="_blank">{this.utils.getUri(cell, this.props.config.namespaceData)}</a>
+                return <a href={"/data/" + this.utils.getUri(cell, this.props.config.namespaceData)} target="_blank">{row[labelColumn]}</a>
             } else {
-                return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
+                return <a href={cell} target="_blank" rel="noreferrer">{row[labelColumn]}</a>
             }
           }
           return cell
         },
         sortFunc: (a, b, order, dataField, rowA, rowB) => {
           if (order === 'asc') {
-            return this.custom_compare(a,b, dataField);
+            return this.custom_compare(rowA[labelColumn],rowB[labelColumn], dataField);
           }
-          return this.custom_compare(b,a, dataField); // desc
+          return this.custom_compare(rowB[labelColumn],rowA[labelColumn], dataField); // desc
         }
-      })
-    })
+    }]
 
     return (
       <div>
-        <h2>{this.props.data.length} result(s) found:</h2>
+        <h2>{this.props.data.length} {entity}(s) found:</h2>
         <br/>
         <div className="asko-table-height-div">
           <BootstrapTable
@@ -106,5 +109,6 @@ export default class ResultsTable extends Component {
 ResultsTable.propTypes = {
   header: PropTypes.object,
   data: PropTypes.object,
+  entity: PropTypes.string,
   config: PropTypes.object
 }
