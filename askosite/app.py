@@ -147,4 +147,5 @@ def _check_askomics(config):
     # TODO : Maybe restrict compatible versions here?
     if not res.status_code == 200:
         raise Exception("Cannot access Askomics: error {}".format(res.status_code))
-    return res.json["namespaceData"], res.json["namespaceInternal"]
+    data = res.json()['config']
+    return data["namespaceData"], data["namespaceInternal"]

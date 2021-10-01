@@ -13,6 +13,10 @@ export default class Utils {
     }
   }
 
+  getUri(url, namespace){
+    return url.replace(namespace, "")
+  }
+
   splitUrl(url) {
     let splitList = url.split('/')
     // take last elem
@@ -78,3 +82,4 @@ export default class Utils {
   }
 
 }
+

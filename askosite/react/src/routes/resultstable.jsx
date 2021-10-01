@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
+import axios from 'axios'
 import { Redirect } from 'react-router-dom'
 import WaitingDiv from './waiting'
 import { Badge, Button } from 'reactstrap'
@@ -12,7 +13,9 @@ export default class ResultsTable extends Component {
   constructor (props) {
     super(props)
     this.state = {
-        filter_columns: {}
+        filter_columns: {},
+        uri: "",
+        data: {}
     }
     this.utils = new Utils()
     this.custom_compare = this.custom_compare.bind(this)
@@ -44,14 +47,15 @@ export default class ResultsTable extends Component {
 
   handleData (event) {
     // request api to get a preview of file
-    let requestUrl = '/api/data/' + event.target.id
+    let target = event.target.id
+    let requestUrl = '/api/data/' + target
     axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
       .then(response => {
-        console.log(requestUrl, response.data)
         // set state of resultsPreview
         this.setState({
           redirectUri: true,
-          data: response.data
+          data: response.data.data,
+          uri: target
         })
       })
       .catch(error => {
@@ -85,7 +89,7 @@ export default class ResultsTable extends Component {
           pathname: '/data',
           state: {
             data: this.state.data,
-            entity: this.props.entity,
+            uri: this.state.uri,
             config: this.props.config
           }
       }} />
@@ -100,8 +104,8 @@ export default class ResultsTable extends Component {
         index: index,
         formatter: (cell, row) => {
           if (this.utils.isUrl(cell)) {
-            if (cell.startsWith(this.props.config.namespaceInternal)){
-                return <Button id={this.utils.splitUrl(cell)} color="link" onClick={this.handleData}>{this.utils.splitUrl(cell)}</Button>
+            if (cell.startsWith(this.props.config.namespaceData)){
+                return <Button id={this.utils.getUri(cell, this.props.config.namespaceData)} color="link" onClick={this.handleData}>{this.utils.getUri(cell, this.props.config.namespaceData)}</Button>
             } else {
                 return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
             }
@@ -119,6 +123,7 @@ export default class ResultsTable extends Component {
 
     return (
       <div>
+        {redirectUri}
         <h2>{this.props.data.length} result(s) found:</h2>
         <br/>
         <div className="asko-table-height-div">
@@ -142,6 +147,5 @@ export default class ResultsTable extends Component {
 ResultsTable.propTypes = {
   header: PropTypes.object,
   data: PropTypes.object,
-  entity: PropTypes.string,
   config: PropTypes.object
 }

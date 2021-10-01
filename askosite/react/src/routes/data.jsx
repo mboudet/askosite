@@ -3,11 +3,11 @@ import axios from 'axios'
 import { Button, Form, FormGroup, Label, Input, Alert, Row, Col, CustomInput } from 'reactstrap'
 import BootstrapTable from 'react-bootstrap-table-next'
 import paginationFactory from 'react-bootstrap-table2-paginator'
-import cellEditFactory from 'react-bootstrap-table2-editor'
 import update from 'react-addons-update'
 import { withRouter } from "react-router-dom";
 import PropTypes from 'prop-types'
 import { Redirect } from 'react-router-dom'
+import Utils from './utils'
 
 class Data extends Component {
   constructor (props) {
@@ -15,13 +15,38 @@ class Data extends Component {
     this.state = {
       config: this.props.location.state.config,
       data: this.props.location.state.data,
-      entity: this.props.location.state.entity,
+      uri: this.props.location.state.uri,
       error: false,
       errorMessage: '',
     }
+    this.utils = new Utils()
+    this.handleData = this.handleData.bind(this)
   }
 
-  componentDidMount () {}
+  handleData (event) {
+    // request api to get a preview of file
+    let target = event.target.id
+    let requestUrl = '/api/data/' + target
+    axios.get(requestUrl, {baseURL: this.state.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+      .then(response => {
+        console.log(requestUrl, response.data)
+        // set state of resultsPreview
+        this.setState({
+          redirectUri: true,
+          data: response.data.data,
+          uri: target
+        })
+      })
+      .catch(error => {
+        console.log(error, error.response.data.errorMessage)
+        this.setState({
+          error: true,
+          errorMessage: error.response.data.errorMessage,
+          status: error.response.status,
+          waiting: false
+        })
+      })
+  }
 
   componentWillUnmount () {
     if (!this.props.waitForStart) {
@@ -30,7 +55,7 @@ class Data extends Component {
   }
 
   render () {
-    let entity = this.state.entity
+    let uri = this.state.uri
 
     let columns = [{
       dataField: 'predicate',
@@ -48,8 +73,10 @@ class Data extends Component {
       sort: true,
       formatter: (cell, row) => {
         if (this.utils.isUrl(cell)) {
-          if (cell.startsWith(this.props.config.namespaceInternal)){
-            return this.utils.splitUrl(cell)
+          if (cell.startsWith(this.state.config.namespaceInternal)){
+            return this.utils.getUri(cell, this.state.config.namespaceInternal)
+          } else if (cell.startsWith(this.state.config.namespaceData)) {
+            return <Button id={this.utils.getUri(cell, this.state.config.namespaceData)} color="link" onClick={this.handleData}>{this.utils.getUri(cell, this.state.config.namespaceData)}</Button>
           } else {
             return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
           }
@@ -61,7 +88,7 @@ class Data extends Component {
 
     return (
       <div className="container">
-        <h2>Information about entity {entity}</h2>
+        <h2>Information about entity {uri}</h2>
         <br />
         <div className="asko-table-height-div">
           <BootstrapTable
