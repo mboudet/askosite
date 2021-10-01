@@ -44,6 +44,7 @@ class Data extends Component {
       })
   }
 
+<<<<<<< HEAD
   componentDidMount () {
     if (!this.props.waitForStart) {
       this.loadData()
@@ -56,6 +57,8 @@ class Data extends Component {
     }
   }
 
+=======
+>>>>>>> 84b540de224565fbd1c36d2f76180868cd219f95
   render () {
     let uri = this.props.match.params.uri;
 
