@@ -63,7 +63,7 @@ export default class Home extends Component {
         axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
           .then(response => {
             var excludedEntities = this.props.config.excludedEntities
-	    this.setState({
+	          this.setState({
               waiting: false,
               startpoints: response.data.startpoints.reduce(function(filtered, startpoint) {
                 if (! excludedEntities.includes(startpoint.entity)){

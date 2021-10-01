@@ -12,7 +12,8 @@ def config():
         "excludedEntities": current_app.config.get('EXCLUDED_ENTITIES', []),
         "excludedAttributes": current_app.config.get('EXCLUDED_ATTRIBUTES', []),
         "namespaceInternal": current_app.config.get("NAMESPACE_INTERNAL"),
-        "namespaceData": current_app.config.get("NAMESPACE_DATA")
+        "namespaceData": current_app.config.get("NAMESPACE_DATA"),
+        "excludedAttributeTypes": current_app.config.get("EXCLUDED_ATTRIBUTE_TYPES"),
     }
 
     json = {

@@ -23,6 +23,7 @@ export default class Routes extends Component {
         proxyPath: document.getElementById('proxy_path').getAttribute('proxy_path'),
         excludedEntities: [],
         excludedAttributes: [],
+        excludedAttributeTypes: [],
         perPage: 30,
         namespaceInternal: 'http://askomics.org/internal/',
         namespaceData: 'http://askomics.org/data/'

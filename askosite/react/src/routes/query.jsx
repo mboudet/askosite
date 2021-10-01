@@ -108,6 +108,10 @@ export default class Query extends Component {
     }
   }
 
+  getDisplay(label, type){
+    return ! (this.state.config.excludedAttributes.includes(label) || this.state.config.excludedAttributeTypes.includes(type))
+  }
+
   nodeHaveInstancesWithLabel (uri) {
     return this.state.abstraction.entities.some(entity => {
       return (entity.uri == uri && entity.instancesHaveLabels)
@@ -145,7 +149,8 @@ export default class Query extends Component {
       form: false,
       negative: false,
       linked: false,
-      linkedWith: null
+      linkedWith: null,
+      display: false
     })
 
     id += 1
@@ -170,7 +175,8 @@ export default class Query extends Component {
         form: false,
         negative: false,
         linked: false,
-        linkedWith: null
+        linkedWith: null,
+        display: true
       })
     }
 
@@ -196,7 +202,8 @@ export default class Query extends Component {
           form: false,
           negative: false,
           linked: false,
-          linkedWith: null
+          linkedWith: null,
+          display: this.getDisplay(attr.label, attributeType)
         }
 
         id += 1

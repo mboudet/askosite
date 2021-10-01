@@ -392,6 +392,9 @@ export default class AttributeBox extends Component {
 
   render () {
     let box = null
+    if (! this.props.attribute.display){
+      return box
+    }
     if (this.props.attribute.type == 'text') {
       box = this.renderText()
     }
