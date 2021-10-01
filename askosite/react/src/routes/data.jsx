@@ -25,8 +25,8 @@ class Data extends Component {
   loadData (event) {
     // request api to get a preview of file
     let uri = this.props.match.params.uri;
-    let requestUrl = '/api/data/' + target
-    axios.get(requestUrl, {baseURL: this.state.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
+    let requestUrl = '/api/data/' + uri
+    axios.get(requestUrl, {baseURL: this.props.config.proxyPath, cancelToken: new axios.CancelToken((c) => { this.cancelRequest = c }) })
       .then(response => {
         this.setState({
           isLoading: false,
@@ -44,7 +44,6 @@ class Data extends Component {
       })
   }
 
-<<<<<<< HEAD
   componentDidMount () {
     if (!this.props.waitForStart) {
       this.loadData()
@@ -57,8 +56,6 @@ class Data extends Component {
     }
   }
 
-=======
->>>>>>> 84b540de224565fbd1c36d2f76180868cd219f95
   render () {
     let uri = this.props.match.params.uri;
 
@@ -78,10 +75,10 @@ class Data extends Component {
       sort: true,
       formatter: (cell, row) => {
         if (this.utils.isUrl(cell)) {
-          if (cell.startsWith(this.state.config.namespaceInternal)){
-            return this.utils.getUri(cell, this.state.config.namespaceInternal)
-          } else if (cell.startsWith(this.state.config.namespaceData)) {
-            return <a href={"/data/" + this.utils.getUri(cell, this.state.config.namespaceData)}>{this.utils.getUri(cell, this.state.config.namespaceData)}</a>
+          if (cell.startsWith(this.props.config.namespaceInternal)){
+            return this.utils.getUri(cell, this.props.config.namespaceInternal)
+          } else if (cell.startsWith(this.props.config.namespaceData)) {
+            return <a href={"/data/" + this.utils.getUri(cell, this.props.config.namespaceData)}>{this.utils.getUri(cell, this.props.config.namespaceData)}</a>
           } else {
             return <a href={cell} target="_blank" rel="noreferrer">{this.utils.splitUrl(cell)}</a>
           }

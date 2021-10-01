@@ -1,12 +1,12 @@
 import React, { Component, lazy, Suspense } from 'react'
 import { Badge, Button, Card, CardTitle, CardBody, CardText, Form, FormGroup, Input, Label, Row, Col, ButtonGroup, CustomInput, Alert, InputGroup} from 'reactstrap'
-import { Redirect, Link } from 'react-router-dom'
+import { Redirect, Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import WaitingDiv from './waiting'
 import ErrorDiv from './error'
 import axios from 'axios'
 
-export default class Home extends Component {
+class Home extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -26,9 +26,13 @@ export default class Home extends Component {
   }
 
   handleStart (event) {
-    this.setState({
-      startSession: true
-    })
+    this.props.history.push({
+      pathname: "/query",
+      state: {
+        config: this.props.config,
+        startpoint: this.state.selected
+      }
+    });
   }
 
   handleClick (event) {
@@ -99,17 +103,6 @@ export default class Home extends Component {
 
   render () {
 
-    let redirectQueryBuilder
-    if (this.state.startSession) {
-      redirectQueryBuilder = <Redirect to={{
-        pathname: '/query',
-        state: {
-          config: this.props.config,
-          startpoint: this.state.selected
-        }
-      }} />
-    }
-
     let errorDiv
     if (this.state.error) {
       errorDiv = (
@@ -171,7 +164,6 @@ export default class Home extends Component {
 
     return (
       <div className="container">
-        {redirectQueryBuilder}
         { frontMessage }
         <WaitingDiv waiting={this.state.waiting} center />
           <Row>
@@ -192,4 +184,7 @@ export default class Home extends Component {
 Home.propTypes = {
   waitForStart: PropTypes.bool,
   config: PropTypes.object,
+  history: PropTypes.object
 }
+
+export default withRouter(Home)
